@@ -92,8 +92,8 @@ class Tree {
     }
 
     while (queue.length > 0) {
-      const currentNode = queue.shift;
-      callback(currentNode);
+      const currentNode = queue.shift();
+      callback(currentNode.data);
 
       if (currentNode.left !== null) queue.push(currentNode.left);
 
@@ -106,7 +106,7 @@ class Tree {
 
     if (currentNode === null) return;
 
-    callback(currentNode);
+    callback(currentNode.data);
     this.preOrder(callback, currentNode.left);
     this.preOrder(callback, currentNode.right);
   }
@@ -117,7 +117,7 @@ class Tree {
     if (currentNode === null) return;
 
     this.inOrder(callback, currentNode.left);
-    callback(currentNode);
+    callback(currentNode.data);
     this.inOrder(callback, currentNode.right);
   }
 
@@ -128,7 +128,7 @@ class Tree {
 
     this.postOrder(callback, currentNode.left);
     this.postOrder(callback, currentNode.right);
-    callback(currentNode);
+    callback(currentNode.data);
   }
 
   height(node) {
@@ -156,10 +156,10 @@ class Tree {
     const checkHeight = (node) => {
       if (node === null) return 0;
 
-      const leftHeight = checkHeight(currentNode.left);
+      const leftHeight = checkHeight(node.left);
       if (leftHeight === -1) return -1;
 
-      const rightHeight = checkHeight(currentNode.right);
+      const rightHeight = checkHeight(node.right);
       if (rightHeight === -1) return -1;
 
       if (Math.abs(leftHeight - rightHeight) > 1) return -1;
@@ -176,7 +176,7 @@ class Tree {
       if (node === null) return;
 
       inOrderTraversal(node.left);
-      values.push(node);
+      values.push(node.data);
       inOrderTraversal(node.right);
     };
 
@@ -198,3 +198,75 @@ const prettyPrint = (node, prefix = "", isLeft = true) => {
     prettyPrint(node.left, `${prefix}${isLeft ? "    " : "│   "}`, true);
   }
 };
+
+const generateRandomNumbers = (size, max = 100) => {
+  return Array.from({ length: size }, () => Math.floor(Math.random() * max));
+};
+
+const randomNumbers = generateRandomNumbers(15);
+console.log("Random numbers: ", randomNumbers);
+
+const binarySearchTree = new Tree(randomNumbers);
+
+console.log("Is the tree balanced:");
+console.log(binarySearchTree.isBalanced());
+console.log("======");
+
+prettyPrint(binarySearchTree.root);
+
+function printData(element) {
+  console.log(element);
+}
+
+console.log("Level order:");
+binarySearchTree.levelOrder(printData);
+
+console.log("Preorder:");
+binarySearchTree.preOrder(printData);
+
+console.log("Inorder:");
+binarySearchTree.inOrder(printData);
+
+console.log("Postorder:");
+binarySearchTree.postOrder(printData);
+
+console.log("=====");
+
+const generateRandomOtherNumbers = (size, max = 1000) => {
+  return Array.from({ length: size }, () => Math.floor(Math.random() * max));
+};
+
+console.log("New numbers:");
+const moreNumbers = generateRandomOtherNumbers(6);
+console.log(moreNumbers);
+console.log("=====");
+
+moreNumbers.forEach((num) => binarySearchTree.insert(num));
+
+console.log("Is the tree still balanced:");
+console.log(binarySearchTree.isBalanced());
+console.log("======");
+
+prettyPrint(binarySearchTree.root);
+
+binarySearchTree.rebalance();
+console.log("Is the tree rebalanced:");
+console.log(binarySearchTree.isBalanced());
+console.log("======");
+
+prettyPrint(binarySearchTree.root);
+console.log("=====");
+
+console.log("Level order:");
+binarySearchTree.levelOrder(printData);
+
+console.log("Preorder:");
+binarySearchTree.preOrder(printData);
+
+console.log("Inorder:");
+binarySearchTree.inOrder(printData);
+
+console.log("Postorder:");
+binarySearchTree.postOrder(printData);
+
+console.log("=====");
